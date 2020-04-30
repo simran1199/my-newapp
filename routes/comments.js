@@ -8,6 +8,7 @@ router.get("/campgrounds/:id/comments/new", isloggedin,function(req, res){
 	campground.findById(req.params.id, function(err, campground){
 		if(err){
 			console.log(err);
+			res.redirect("/campgrounds");
 		}else{
 			res.render("comments/new",{campground:campground});
 		}
@@ -34,7 +35,7 @@ router.post("/campgrounds/:id/comments",isloggedin,function(req, res){
 				
 				//save comment
 				comment.save();
-				campgrounds.comments.push(comment);
+				campground.comments.push(comment);
 				campground.save();
 				req.flash("success","Successfully added a comment!!");
 				res.redirect("/campgrounds/" + campground._id);
@@ -55,7 +56,7 @@ router.get("/campgrounds/:id/comments/:comment_id/edit",checkcommentownership, f
 		if(err){
 			res.redirect("back");
 		}else{
-			res.render("comments/edit",{campground_id:req.params.id, comment:foundcomment});
+			res.render("comments/edit",{campground_id:req.params.id, comment:foundcomment,campground:campground});
 		}
 	});
 	
@@ -63,11 +64,12 @@ router.get("/campgrounds/:id/comments/:comment_id/edit",checkcommentownership, f
 
 //comment update
 router.put("/campgrounds/:id/comments/:comment_id", checkcommentownership,function(req, res){
+	
 	comment.findByIdAndUpdate(req.params.comment_id,req.body.comment, function(err, updatecomment){
 		if(err){
 			res.redirect("back");
 		}else{
-			res.redirect("/campgrounds/" + req.params.id);
+			res.redirect("/campgrounds/" + campground.id);
 		}
 	});
 });
@@ -76,7 +78,7 @@ router.put("/campgrounds/:id/comments/:comment_id", checkcommentownership,functi
 //comments destroy router
 router.delete("/campgrounds/:id/comments/:comment_id", checkcommentownership, function(req, res){
 	//findbyid and remove
-	comment.findbyidAndRemove(req.params.comment_id, function(err){
+	comment.findByIdAndRemove(req.params.comment_id, function(err){
 		if(err){
 			res.redirect("back");
 		}else{
