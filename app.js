@@ -17,11 +17,19 @@ var commentroutes=require("./routes/comments"),
 	indexroutes=require("./routes/index");
 
 
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useUnifiedTopology', true);
+//mongoose.set('useNewUrlParser', true);
+//mongoose.set('useUnifiedTopology', true);
 
 
-mongoose.connect("mongodb://localhost:27017/myyelpcamp");
+//mongoose.connect("mongodb://localhost:27017/myyelpcamp");
+mongoose.connect("mongodb+srv://simmi:salvatores@cluster0-ym1mo.mongodb.net/test?retryWrites=true&w=majority",{
+	useNewUrlParser :true,
+	useUnifiedTopology: true
+}).then(() =>{
+	console.log("connected to db!!!");
+}).catch(err =>{
+	console.log("ERROR:", err.message);
+});
 
 app.use(bodyparser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
