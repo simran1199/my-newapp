@@ -2,7 +2,9 @@ var express=require("express");
 var app=express();
 var bodyparser= require("body-parser");
 var mongoose=require("mongoose");
- var flash=require("connect-flash");
+var flash=require("connect-flash");
+var dotenv = require("dotenv");
+dotenv.config();
 
 var comment= require("./models/comment");
 var seeddb = require("./seeds");
@@ -15,14 +17,8 @@ var user=require("./models/user");
 var commentroutes=require("./routes/comments"),
 	campgroundroutes=require("./routes/campgrounds"),
 	indexroutes=require("./routes/index");
-
-
-//mongoose.set('useNewUrlParser', true);
-//mongoose.set('useUnifiedTopology', true);
-
-
-//mongoose.connect("mongodb://localhost:27017/myyelpcamp");
-mongoose.connect("mongodb+srv://simmi:salvatores@cluster0-ym1mo.mongodb.net/test?retryWrites=true&w=majority",{
+	
+mongoose.connect(process.env.CONNECTIONSTRING,{
 	useNewUrlParser :true,
 	useUnifiedTopology: true
 }).then(() =>{
@@ -58,16 +54,6 @@ app.use(function(req, res, next){
 	
 	next();
 });
-
-/*====================================
-comments routes
-===============================*/
-
-
-/*===================================
-auth routes
-==================================*/
-
 
 app.use(indexroutes);
 app.use(campgroundroutes);
